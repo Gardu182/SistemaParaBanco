@@ -7,15 +7,13 @@ namespace SistemaParaBanco
         //Propiedades
         public int nombreCuenta {get; set;}
         public int PIN {get; set;}
-        public double saldoDisponible {get; set;}
         public double saldoTotal {get; set;}  
 
         //Metodo constructor
-        public Cuenta(int elNombreCuenta, int elPIN, double elSaldoDisponible, double elSaldoTotal)
+        public Cuenta(int elNombreCuenta, int elPIN, double elSaldoTotal)
         {
             nombreCuenta = elNombreCuenta;
             PIN = elPIN;
-            saldoDisponible = elSaldoDisponible;
             saldoTotal = elSaldoTotal;
 
         }
@@ -23,7 +21,7 @@ namespace SistemaParaBanco
         //Metodos de la clase Cuenta
         public bool validarPIN(int usuarioPIN)
         {
-            if(usuarioPIN == PIN){
+            if(PIN == usuarioPIN){
                 return true;
             } 
             else 
@@ -33,7 +31,13 @@ namespace SistemaParaBanco
             
         }
 
-        public void credito(double cantidad)
+        public void Retiro(double cantidad)
+        {
+            saldoTotal -= cantidad;
+
+        }
+
+        public void Desposito(double cantidad)
         {
             saldoTotal += cantidad;
 

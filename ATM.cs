@@ -8,6 +8,16 @@ namespace SistemaParaBanco
         //Propiedades
         private bool usuarioAutenticado;
         private int actualNumeroCuenta;
+
+        //enumeracion para el menu de opciones
+        private enum menuoOpciones
+        {
+            Balance = 1,
+            Retiros = 2,
+            Depositos = 3,
+            Salir = 4
+
+        }
     
         //Constructor de la classe ATM
         public ATM()
@@ -28,6 +38,7 @@ namespace SistemaParaBanco
                     autenticarUsuario();
                 }
 
+                realizarTransaccion();
                 usuarioAutenticado = false;
                 actualNumeroCuenta = 0;
                 Console.WriteLine("\nGracias! Adios!");
@@ -46,11 +57,11 @@ namespace SistemaParaBanco
             Console.WriteLine("\nColoque su PIN: ");
             int pin = Convert.ToInt16(Console.ReadLine());
 
-            //usuarioAutenticado = cuenta.autenticarUsuario(tipoCuenta , pin);
+            usuarioAutenticado = baseDatos.autenticarUsuario(tipoCuenta , pin);
 
             if(usuarioAutenticado)
             {
-                actualNumeroCuenta = 0;//baseDatos;
+                actualNumeroCuenta = tipoCuenta;
             } 
             else 
             {
@@ -61,6 +72,7 @@ namespace SistemaParaBanco
 
         public void realizarTransaccion()
         {
+            double transaccionActual;
             bool usuarioSalio = false;
 
             while(!usuarioSalio)
@@ -69,16 +81,22 @@ namespace SistemaParaBanco
 
                 switch(seleccionMenuPrincipal)
                 {
-                    case 1:
+                    case (int)menuoOpciones.Balance:
+                    transaccionActual = CrearTransaccion(seleccionMenuPrincipal);
+                    Console.WriteLine("\nSu valance al dia de hoy es de: {0:C2}.", transaccionActual);
+                    break;
+                    
+                    case (int)menuoOpciones.Retiros:
+                    transaccionActual = CrearTransaccion(seleccionMenuPrincipal);
                     break;
 
-                    case 2:
+                    case (int)menuoOpciones.Depositos:
+                    transaccionActual = CrearTransaccion(seleccionMenuPrincipal);
                     break;
 
-                    case 3:
-                    break;
-
-                    case 4:
+                    case (int)menuoOpciones.Salir:
+                    Console.WriteLine("\nSaliendo del Sistema");
+                    usuarioSalio = true;
                     break;
 
                     default:
@@ -104,6 +122,30 @@ namespace SistemaParaBanco
 
             return opcion;
 
+        }
+
+        private double CrearTransaccion(int tipo)
+        {
+            double temp = 0;
+
+            switch((menuoOpciones) tipo)
+            {
+                case menuoOpciones.Balance:
+                temp = baseDatos.GetSaldoDisponible(actualNumeroCuenta);
+                break;
+
+                case menuoOpciones.Retiros:
+                Console.WriteLine("Proporcione la cantidad a retirar:");
+                double cantidad = Convert.ToInt32(Console.ReadLine());
+                temp = baseDatos.hacerRetiro(actualNumeroCuenta, cantidad);
+                break;
+
+                case menuoOpciones.Depositos:
+                break;
+
+            }
+
+            return temp; 
         }
 
     }
